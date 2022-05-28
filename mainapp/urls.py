@@ -28,5 +28,5 @@ urlpatterns = [
     path('my_task_details/<int:application_id>/', view_ui.my_task_details),
     path('all_tasks/', view_ui.all_tasks, name='all_tasks'),
     path('all_task_details/<int:application_id>/', view_ui.all_task_details),
-    # path('overview/', view_ui.overview),
+    path('overview/', view_ui.overview),
 ]

@@ -89,10 +89,10 @@ var decomm = {
             if(data.success) {
                 var html;
                 if(data.msg == "") {
-                    html = '<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Started decomming <span id="resp-app-id">' + app_id + '</span>';
+                    html = '<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Started updating <span id="resp-app-id">' + app_id + '</span>';
                 }
                 else {
-                    html = '<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Started decomming <span id="resp-app-id">' + app_id + '</span><br/>' + '<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> <span class="text-danger">' + data.msg + '</span>';
+                    html = '<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Started updating <span id="resp-app-id">' + app_id + '</span><br/>' + '<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> <span class="text-danger">' + data.msg + '</span>';
                 }
                 $("#decomm-resp-info").html(html);
                 $("#decomm-resp-modal").modal("show");

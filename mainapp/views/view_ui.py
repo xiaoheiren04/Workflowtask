@@ -342,21 +342,21 @@ def all_task_details(request, application_id):
         # "changes": changes,
         "flow_data": json.dumps(flow_data),
     })
-# @login_required
-# def overview(request):
-#     task_rows = Task.objects.select_related('user', 'workflow').filter(
-#         workflow__state="COMPLETED").order_by("-workflow__last_update")[:10]
-#     recent_tasks = []
-#     for task_row in task_rows:
-#         username = task_row.user.username
-#         application = task_row.application
-#         last_update = task_row.workflow.last_update.strftime("%Y-%m-%d %H:%M:%S")
-#         recent_tasks.append({
-#             "username": username,
-#             "application": application,
-#             "last_update": last_update,
-#         })
-#
-#     return render(request, "mainapp/overview.html", {"recent_tasks": recent_tasks})
+@login_required
+def overview(request):
+    task_rows = Task.objects.select_related('user', 'workflow').filter(
+        workflow__state="COMPLETED").order_by("-workflow__last_update")[:10]
+    recent_tasks = []
+    for task_row in task_rows:
+        username = task_row.user.username
+        application = task_row.application
+        last_update = task_row.workflow.last_update.strftime("%Y-%m-%d %H:%M:%S")
+        recent_tasks.append({
+            "username": username,
+            "application": application,
+            "last_update": last_update,
+        })
+
+    return render(request, "mainapp/overview.html", {"recent_tasks": recent_tasks})
 
 
