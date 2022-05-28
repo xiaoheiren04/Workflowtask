@@ -1,0 +1,23 @@
+{% extends "mainapp/task_details.html" %}
+{% block navbar %}
+  <li><a href="/overview/">Overview</a></li>
+  <li><a href="/decomm_app/">Decomm App</a></li>
+  <li><a href="/flex_updown/">Flex Up/Down</a></li>
+  <li><a href="/decomm_standalone/">Decomm Standalone</a></li>
+  <li><a href="/downgrade_region/">Up/Downgrade Region</a></li>
+    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">LB Operation<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li class="nav-header">LTM </li>
+                <li><a href="/lb_operation/disable_enable_vip">Disable/Enable VIP</a></li>
+                <li><a href="/lb_operation/create_delete_vip">Create/Delete VIP</a></li>
+                <li><a href="/lb_operation/add_remove_nodes_to_vip">VIP Add/Remove Node</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="nav-header">GTM </li>
+                </ul>
+          </li>
+  <li class="active"><a href="/my_tasks/">My Tasks</a></li>
+  <li><a href="/all_tasks/">All Tasks</a></li>
+{% endblock %}
+{% block breadcrumbs %}
+  <p class="decomm-nav"><a href="/my_tasks/">My Tasks</a> / <span class="grey">{{ application }}</span></p>
+{% endblock %}

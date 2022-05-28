@@ -1,0 +1,79 @@
+{% extends "mainapp/base.html" %}
+{% block title %}EasyRTB{% endblock %}
+{% block content %}
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">MOPS</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+      {% block navbar %}{% endblock %}
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+        <p class="navbar-text">Welcome, {{ user.username }}! <a href="/api/logout" class="navbar-link">Logout</a></p>
+        {% else %}
+        <p class="navbar-text"><a href="/" class="navbar-link">Sign In</a></p>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  {% block breadcrumbs %}{% endblock %}
+  <p class="detl-titl"><strong>Current Status</strong>: <span class="label label-info">{{ state_uiname }}</span></p>
+  <p><strong>Origination</strong>: {{ origination|default:"NA" }}</p>
+  {% if has_err %}
+  <p><strong>Error</strong></p>
+  <p class="msg-failed">{{ err_msg|safe }}</p>
+  {% endif %}
+  {% if changes %}
+  <p><strong>CR: </strong>
+  {% for change in changes %}
+  <span>{{ change.cr_num }} ({{ change.cr_state }})</span>
+  {% endfor %}
+  </p>
+  {% endif %}
+  <div class="flw"></div>
+  <!--
+  {% if jobs %}
+  <h4 class="detl-titl">Jobs Submitted</h4>
+  {% for job in jobs %}
+  {% if job.job_state == "success" %}
+  <p><span class="label label-default">{{ job.timestamp }}</span> <span class="label label-success">{{ job.job_state }}</span> {{ job.job_type }}</p>
+  {% elif job.job_state == "failed" %}
+  <p><span class="label label-default">{{ job.timestamp }}</span> <span class="label label-danger">{{ job.job_state }}</span> {{ job.job_type }}</p>
+  {% else %}
+  <p><span class="label label-default">{{ job.timestamp }}</span> <span class="label label-info">{{ job.job_state }}</span> {{ job.job_type }}</p>
+  {% endif %}
+  <p><strong>Job URL</strong>: <a href="{{ job.job_url }}">{{ job.job_url }}</a></p>
+  {% if job.job_state == "success" %}
+  <p><strong>Rollback steps</strong></p>
+  {% for rollback in job.rollback %}
+  <p>{{ rollback.method }} {{ rollback.url }}</p>
+  <p>Headers</p>
+  {% for key, value in rollback.headers.items %}
+  <p class="rlbk-step">{{ key }}: {{ value }}</p>
+  {% endfor %}
+  <p>Payload</p>
+  <p class="rlbk-step">{{ rollback.data }}</p>
+  {% endfor %}
+  {% elif job.job_state == "failed" %}
+  <p><strong>Error</strong>: {{ job.error }}</p>
+  {% endif %}
+  <p>{{ job.error }}</p>
+  {% endfor %}
+  {% endif %}
+  -->
+</div>
+{% endblock %}
+{% block extrajs %}
+<script>
+  $(document).ready(function(){
+      var flow_data = {{ flow_data|safe }};
+      task_details.init(flow_data);
+  });
+</script>
+{% endblock %}
+

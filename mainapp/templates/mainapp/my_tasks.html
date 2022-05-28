@@ -1,0 +1,204 @@
+{% extends "mainapp/base.html" %}
+{% block title %}EasyRTB{% endblock %}
+{% block content %}
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">MOPS</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/overview/">Overview</a></li>
+        <li><a href="/decomm_app/">Decomm App</a></li>
+        <li><a href="/flex_updown/">Flex Up/Down</a></li>
+        <li><a href="/decomm_standalone/">Decomm Standalone</a></li>
+        <li><a href="/downgrade_region/">Up/Downgrade Region</a></li>
+          <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">LB Operation<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li class="nav-header">LTM </li>
+                <li><a href="/lb_operation/disable_enable_vip">Disable/Enable VIP</a></li>
+                <li><a href="/lb_operation/create_delete_vip">Create/Delete VIP</a></li>
+                <li><a href="/lb_operation/add_remove_nodes_to_vip">VIP Add/Remove Node</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="nav-header">GTM </li>
+                </ul>
+          </li>
+        <li class="active"><a href="/my_tasks/">My Tasks</a></li>
+        <li><a href="/all_tasks/">All Tasks</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+        <p class="navbar-text">Welcome, {{ user.username }}! <a href="/api/logout" class="navbar-link">Logout</a></p>
+        {% else %}
+        <p class="navbar-text"><a href="/" class="navbar-link">Sign In</a></p>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <p class="decomm-nav"><span class="grey">My Tasks</span></p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th style="width: 300px;">Application Serivce</th>
+        <th style="width: 120px;">Type</th>
+        <th style="width: 200px;">Status</th>
+        <th class="decomm-action">Action</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for app in applications %}
+      <tr>
+        <td>{{ app.id }}</td>
+        <td>{{ app.application }}</td>
+        <td>{{ app.type }}</td>
+        {% if app.has_err %}
+        <td><span class="glyphicon glyphicon-exclamation-sign icon-alert"></span> {{ app.state_uiname }}</td>
+        {% else %}
+        <td>{{ app.state_uiname }}</td>
+        {% endif %}
+        <td class="decomm-action">
+          {% if app.has_err %}
+              <div class="btn-group" role="group" aria-label="">
+                <button type="button" class="btn btn-default" id="btn-rtry" task_action="retry" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Retry</button>
+                <button type="button" class="btn btn-default" id="btn-clstsk" task_action="cancel" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Cancel</button>
+                <button type="button" class="btn btn-default" id="btn-cntnu" task_action="continue" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Continue</button>
+              </div>
+          {% elif app.state == "STARTED_BAKE_SEVEN" or app.state == "BAKE_FOR_DISABLE" or app.state == "BAKE_FOR_DECOMM" %}
+          <div class="btn-group" role="group" aria-label="">
+            {% if "Standalone" in app.application %}
+              <button class="btn btn-default" type="button" id="btn-clstsk" bake_days={{ app.bake_days }} task_action="adjust_bake" task_uuid="{{ app.id }}" onclick="decomm.showAdjustModal(event)">Adjust Baking</button>
+              <button class="btn btn-default" type="button" id="btn-clstsk" task_action="cancel" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Cancel</button>
+            {% else %}
+              <button type="button" class="btn btn-default" id="btn-tncmpts" task_action="turnon_server" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Turnon Computes</button>
+              <button class="btn btn-default" type="button" id="btn-clstsk" bake_days={{ app.bake_days }} task_action="adjust_bake" task_uuid="{{ app.id }}" onclick="decomm.showAdjustModal(event)">Adjust Baking</button>
+              <button class="btn btn-default" type="button" id="btn-clstsk" task_action="cancel" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Cancel</button>
+            {% endif %}
+          </div>
+          {% elif app.state == "BAKE_FOR_SLC" or app.state == "BAKE_FOR_LVSAZ01" or app.state == "BAKE_FOR_LVS" or app.state == "BAKE_FOR_RNOAZ01" or app.state == "BAKE_FOR_RNOAZ02" or app.state == "BAKE_FOR_RNOAZ03" or app.state == "BAKE_FOR_RNO"%}
+          <div class="btn-group" role="group" aria-label="">
+              <button class="btn btn-default" type="button" id="btn-clstsk" bake_days={{ app.bake_days }} task_action="adjust_bake" task_uuid="{{ app.id }}" onclick="decomm.showAdjustModal(event)">Adjust Baking</button>
+              <button class="btn btn-default" type="button" id="btn-clstsk" task_action="cancel" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Cancel</button>
+          </div>
+          {% elif app.state == "BAKE_FOR_DECOMM_SLC" or app.state == "BAKE_FOR_DECOMM_LVSAZ01" or app.state == "BAKE_FOR_DECOMM_LVS" or app.state == "BAKE_FOR_DECOMM_RNOAZ01" or app.state == "BAKE_FOR_DECOMM_RNOAZ02" or app.state == "BAKE_FOR_DECOMM_RNOAZ03"%}
+          <div class="btn-group" role="group" aria-label="">
+              <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_stage_decom" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+              <button class="btn btn-default" type="button" id="btn-clstsk" bake_days={{ app.bake_days }} task_action="adjust_bake" task_uuid="{{ app.id }}" onclick="decomm.showAdjustModal(event)">Adjust Baking</button>
+              <button class="btn btn-default" type="button" id="btn-clstsk" task_action="cancel" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Cancel</button>
+          </div>
+          {% elif app.state == "ENDED_DELETE_TOPO" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="start_restore_zebra" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_zebra" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+          {% elif app.state == "END_DOWNGRADE_REGION" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_stage_decom" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_downgrade" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+          {% elif app.state == "END_STAGE_DECOMM" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_stage_decom" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_staged_decomm" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+           {% elif app.state == "END_VIP_DELETE" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_vip_delete" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_vip_delete" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+            {% elif app.state == "END_ADD_NODES" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_add_nodes_to_vip" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_add_nodes_to_vip" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+            {% elif app.state == "END_REMOVE_NODES" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_remove_nodes_from_vip" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_remove_nodes_from_vip" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+          {% elif app.state == "END_LB_OPERATE" %}
+          <div class="btn-group" role="group" aria-label="">
+            <button type="button" class="btn btn-default" id="btn-rllbk" task_action="rollback_lb_operation" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Rollback</button>
+            <button type="button" class="btn btn-default" id="btn-cmplt" task_action="complete_lb_operate" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Complete</button>
+          </div>
+          {% else %}
+          <div class="btn-group" role="group" aria-label="">
+            <button class="btn btn-default" type="button" id="btn-clstsk" task_action="cancel" task_uuid="{{ app.id }}" onclick="decomm.confirmAction(event)">Cancel</button>
+          </div>
+        </td>
+        {% endif %}
+        <td><a href="/my_task_details/{{ app.id }}">Click for details</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <nav aria-label="page navigation" id="bottom-page">
+    <ul class="pagination">
+      {% for p in pages %}
+      {% if p == curr_page %}
+      <li class="active"><a href="/my_tasks/?page={{ p }}">{{ p }}<span class="sr-only">(current)</span></a></li>
+      {% else %}
+      <li><a href="/my_tasks/?page={{ p }}">{{ p }}</a></li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
+
+  <div class="modal fade" id="adjust-bake-modal" tabindex="-1" role="dialog" aria-labelledby="action-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content hide-overflow">
+        <div class="modal-header modal-header-bgc">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span class="glyphicon glyphicon-question-sign white"></span> <span class="white">Adjust Baking Days</span>
+        </div>
+        <div class="modal-body">
+          <p class="modal-confirm">
+            <span>Baking Days: </span>
+            <input type="text" size="1" name="bake-days" id="bake-days" />
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="decomm.updateBakeDays(event)">Continue</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="action-cfm-modal" tabindex="-1" role="dialog" aria-labelledby="action-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content hide-overflow">
+        <div class="modal-header modal-header-bgc">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span class="glyphicon glyphicon-question-sign white"></span> <span class="white">Confirm</span>
+        </div>
+        <div class="modal-body">
+          <p class="modal-confirm" id="cnfm-txt"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="decomm.takeAction(event)">Continue</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="action-resp-modal" tabindex="-1" role="dialog" aria-labelledby="action-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p class="modal-confirm" id="action-resp-info">Done</span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "mainapp/base.html" %}
+{% block title %}Decommission Details{% endblock %}
+{% block content %}
+<div class="container">
+  <p class="lead">Jobs Submitted</p><hr/>
+  {% for job in jobs %}
+  <h3>Job Info</h3>
+  <p><strong>URL</strong>: <a href="{{ job.job_url }}">{{ job.job_url }}</a></p>
+  <p><strong>Type</strong>: {{ job.job_type }}</p>
+  <p><strong>State</strong>: {{ job.job_state }}</p>
+  <h3>Error Message</h3>
+  <p>{{ job.error }}</p>
+  <h3>Rollback Request</h3>
+  <p>{{ job.rollback.method }} {{ job.rollback.url }}</p>
+  <p><strong>Headers</strong></p>
+  {% for key, value in job.rollback.headers.items %}
+  <p>{{ key }}: {{ value }}</p>
+  {% endfor %}
+  <p><strong>Payload</strong></p>
+  {{ job.rollback.data }}
+  <hr/>
+  {% endfor %}
+</div>
+{% endblock %}
+{% block extrajs %}
+{% endblock %}
+

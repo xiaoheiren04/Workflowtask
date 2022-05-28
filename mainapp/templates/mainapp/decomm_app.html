@@ -1,0 +1,89 @@
+{% extends "mainapp/base.html" %}
+{% block title %}EasyDecomm{% endblock %}
+{% block content %}
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">MOPS</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/overview/">Overview</a></li>
+        <li class="active"><a href="/decomm_app/">Update Version</a></li>
+        <li><a href="/my_tasks/">My Tasks</a></li>
+        <li><a href="/all_tasks/">All Tasks</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+        <p class="navbar-text">Welcome, {{ user.username }}! <a href="/api/logout" class="navbar-link">Logout</a></p>
+        {% else %}
+        <p class="navbar-text"><a href="/" class="navbar-link">Sign In</a></p>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+    <div id="decomm">
+      <p class="lead">Please input deployment or statefulset name/namespace</p>
+      <div class="row space-bottom">
+        <div class="col-lg-4">
+          <input type="text" class="form-control" id="decomm-topo" onkeyup="decomm.onkeyupDecomm(event)" placeholder="(e.g. nginx-test/default)">
+        </div>
+      </div>
+      <p class="lead space-bottom">Image name</p>
+      <div class="row space-bottom">
+        <div class="col-lg-4">
+          <input type="text" class="form-control" id="origination" onkeyup="decomm.onkeyupDecomm(event)" placeholder="(e.g. nginx:latest)">
+        </div>
+      </div>
+      <div class="row space-bottom">
+        <div class="col-lg-2">
+          <button class="btn btn-primary" id="btn-decomm-topo" type="button" disabled onclick="decomm.confirmDecomm(event)">Start Update</button>
+        </div>
+      </div>
+      <div id="decomm-errmsg">
+        <div class="alert alert-warning" role="alert" id="decomm-err-alert">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="decomm-cfm-modal" tabindex="-1" role="dialog" aria-labelledby="decomm-label" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content hide-overflow">
+          <div class="modal-header modal-header-bgc">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span class="glyphicon glyphicon-question-sign white"></span> <span class="white">Confirm</span>
+          </div>
+          <div class="modal-body">
+            <p class="lead modal-confirm">Are you sure you want to update <span id="cfm-app-id"></span></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="decomm.startDecomm(event)">Continue</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="decomm-resp-modal" tabindex="-1" role="dialog" aria-labelledby="decomm-label" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p class="lead modal-confirm" id="decomm-resp-info">Initiated decomming <span id="resp-app-id"></span></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+<script>
+$(document).ready(function(){
+
+}); 
+</script>
+{% endblock %}
