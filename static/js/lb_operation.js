@@ -350,23 +350,6 @@ var lb_operation = {
             }
         });
     },
-    onkeyupLBServer: function(event) {
-        var $this = this;
-        timeout = $this.timeout;
-        clearTimeout(timeout);
-        $this.timeout = setTimeout(function() {
-            var lbserver = $.trim($("#lb-server").val());
-            if(lbserver == '') {
-                return;
-            }
-            if(/.ebay.com/.test(lbserver)) {
-                $this.search_lb_server_exist(lbserver);
-            }
-            else {
-                $this.search_server_by_name(lbserver);
-            }
-        }, 500);
-    },
     onkeyupVIPAddress: function(event) {
         var $this = this;
         timeout = $this.timeout;
