@@ -2,8 +2,8 @@ var decomm = {
     action: undefined,
     task_uuid: undefined,
     onkeyupDecomm: function(event) {
-        var app = $("#decomm-topo").val();
-        var origination = $("#origination").val();
+        var app = $("#workload").val();
+        var origination = $("#image-version").val();
         if($.trim(app) != '' && $.trim(origination) != '') {
             $("#btn-decomm-topo").prop('disabled', false);
         }
@@ -63,8 +63,8 @@ var decomm = {
         $("#email-cfm-modal").modal("show");
     },
     startDecomm: function(event) {
-        var app_id = $("#decomm-topo").val();
-        var orig = $("#origination").val();
+        var app_id = $("#workload").val();
+        var orig = $("#image-version").val();
         var payload = JSON.stringify({"app_id": app_id, "origination": orig});
 
 	    $.blockUI({ css: {
@@ -78,7 +78,7 @@ var decomm = {
         }} );
 
         $.ajax({
-            url: "/workflow/start_decomm/",
+            url: "/workflow/start_update/",
             method: "POST",
             dataType: "json",
             contentType : 'application/json',

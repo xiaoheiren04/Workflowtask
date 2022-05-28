@@ -36,49 +36,49 @@ var task_details = {
         }
 
         html_details += '<p><strong>Submittor</strong>: ' + history.user + '</p>';
-        if(history.changes.length > 0) {
-            html_details += '<p><strong>CR Submitted</strong>: ';
-            for(var i=0; i<history.changes.length; i++) {
-                html_details += history.changes[i].cr_num + " (";
-                html_details += history.changes[i].cr_state + ")";
-            }
-            html_details += '</p>';
-        }
-        else {
-            html_details += '<p><strong>CR Submitted</strong>: None</p>';
-        }
+//        if(history.changes.length > 0) {
+//            html_details += '<p><strong>CR Submitted</strong>: ';
+//            for(var i=0; i<history.changes.length; i++) {
+//                html_details += history.changes[i].cr_num + " (";
+//                html_details += history.changes[i].cr_state + ")";
+//            }
+//            html_details += '</p>';
+//        }
+//        else {
+//            html_details += '<p><strong>CR Submitted</strong>: None</p>';
+//        }
 
-        if(history.jiras.length > 0) {
-            html_details += '<p><strong>JIRA Submitted</strong>: '
-            for(var i=0; i<history.jiras.length; i++) {
-                var jira = history.jiras[i];
-                html_details += jira.jira_num + " (";
-                html_details += jira.jira_state + ")";
-            }
-            html_details += '</p>';
-        }
-        else {
-            html_details += '<p><strong>JIRA Submitted</strong>: None</p>';
-        }
+//        if(history.jiras.length > 0) {
+//            html_details += '<p><strong>JIRA Submitted</strong>: '
+//            for(var i=0; i<history.jiras.length; i++) {
+//                var jira = history.jiras[i];
+//                html_details += jira.jira_num + " (";
+//                html_details += jira.jira_state + ")";
+//            }
+//            html_details += '</p>';
+//        }
+//        else {
+//            html_details += '<p><strong>JIRA Submitted</strong>: None</p>';
+//        }
 
-        if(history.jobs.length > 0) {
-            html_details += '<p><strong>Jobs Submitted</strong></p>';
-            for(var i=0; i<history.jobs.length; i++) {
-                var job = history.jobs[i];
-                if(job.job_state == "success") {
-                    html_details += '<p><span class="label label-success">' + job.job_state + '</span> ' + '<a target="_blank" href="' + job.job_url + '">' +  job.job_url + '</a></p>';
-                }
-                else if(job.job_state == "failed") {
-                    html_details += '<p><span class="label label-danger">' + job.job_state + '</span> ' + '<a target="_blank" href="' + job.job_url + '">' + job.job_url + '</a></p>';
-                }
-                else {
-                    html_details += '<p><span class="label label-info">' + job.job_state + '</span> ' + '<a target="_blank" href="' + job.job_url + '">' + job.job_url + '</a></p>';
-                }
-            }
-        }
-        else {
-            html_details += '<p><strong>Jobs Submitted</strong>: None</p>';
-        }
+//        if(history.jobs.length > 0) {
+//            html_details += '<p><strong>Jobs Submitted</strong></p>';
+//            for(var i=0; i<history.jobs.length; i++) {
+//                var job = history.jobs[i];
+//                if(job.job_state == "success") {
+//                    html_details += '<p><span class="label label-success">' + job.job_state + '</span> ' + '<a target="_blank" href="' + job.job_url + '">' +  job.job_url + '</a></p>';
+//                }
+//                else if(job.job_state == "failed") {
+//                    html_details += '<p><span class="label label-danger">' + job.job_state + '</span> ' + '<a target="_blank" href="' + job.job_url + '">' + job.job_url + '</a></p>';
+//                }
+//                else {
+//                    html_details += '<p><span class="label label-info">' + job.job_state + '</span> ' + '<a target="_blank" href="' + job.job_url + '">' + job.job_url + '</a></p>';
+//                }
+//            }
+//        }
+//        else {
+//            html_details += '<p><strong>Jobs Submitted</strong>: None</p>';
+//        }
         html_details += '</div>';
         $("div.flw-detail").html(html_details);
         $("div.flw-detail").css("height", detail_height);

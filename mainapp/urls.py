@@ -19,11 +19,14 @@ urlpatterns = [
     # path('api/start_decomm/<str:app_id>/', view_ui.api_start_decomm),
 
     # workflow
-    # path('workflow/start_decomm/', view_ui.start_decomm),
+    path('workflow/start_update/', view_ui.start_update),
 
     # UI
     path('update_version/', view_ui.update_version_html),
-    # path('my_tasks/', view_ui.my_tasks),
-    # path('all_tasks/', view_ui.all_tasks, name='all_tasks'),
+    path('my_tasks/', view_ui.my_tasks),
+    path('workflow/action/', view_ui.start_action),
+    path('my_task_details/<int:application_id>/', view_ui.my_task_details),
+    path('all_tasks/', view_ui.all_tasks, name='all_tasks'),
+    path('all_task_details/<int:application_id>/', view_ui.all_task_details),
     # path('overview/', view_ui.overview),
 ]

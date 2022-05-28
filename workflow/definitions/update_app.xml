@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow>
+    <type>update_app</type>
+    <time_zone>local</time_zone>
+    <description>Update deployment/statefulset image Flow</description>
+    <actionmod>workflow.actions.update_app</actionmod>
+    <conditionmod>workflow.actions.update_app</conditionmod>
+
+    <state name="INITIAL" ui_name="Initialized" need_confirm="0">
+        <action name="submit_update_app" group="proceed" target="SUBMITTED" />
+        <action name="cancel" group="cancel" target="CANCELLED" />
+    </state>
+    <state name="SUBMITTED" ui_name="Update app Task Submitted" need_confirm="0" sla="2">
+        <action name="check_workload_image" group="proceed" target="CHECKED_WORKLOAD_IMAGE" />
+        <action name="cancel" group="cancel" target="CANCELLED" />
+    </state>
+    <state name="CHECKED_WORKLOAD_IMAGE" ui_name="Checked Workload Image" need_confirm="0" sla="2">
+        <action name="complete_update_app" group="proceed" target="COMPLETED" />
+    </state>
+    <state name="CANCELLED" ui_name="Cancelled" need_confirm="0" />
+    <state name="COMPLETED" ui_name="Completed" need_confirm="0" />
+</workflow>
+

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
+    'django_celery_beat',
     'mainapp',
     'workflow',
     'compressor',
@@ -144,3 +146,5 @@ STATICFILES_FINDERS = (
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 LOGIN_URL = "/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CELERY_BROKER_URL = 'amqp://easyrtb:easyrtb@127.0.0.1/easyrtb_vhost'
+CELERY_RESULT_BACKEND = 'django-db'
